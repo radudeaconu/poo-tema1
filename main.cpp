@@ -1,57 +1,201 @@
 #include <iostream>
 #include <array>
+#include <random>
+#include <ctime>
 
 #include <Helper.h>
 
+
+class Player{
+    int x,y;
+    char symbol;
+
+public:
+    int getX() const {
+        return x;
+    }
+
+    int getY() const {
+        return y;
+    }
+
+    char getSymbol() const {
+        return symbol;
+    }
+
+    Player(): x{1}, y{1}, symbol{'o'} {}
+    explicit Player(int x_, int y_, char symbol_='o') : x{x_}, y{y_}, symbol(symbol_) {}
+    Player(const Player& other): x{other.x}, y{other.y}, symbol{other.symbol} {}
+
+    friend std::ostream &operator<<(std::ostream &os, const Player &player) {
+        os << "x: " << player.x << " y: " << player.y << " symbol: " << player.symbol;
+        return os;
+    }
+};
+
+class Enemy{
+    int x,y;
+    char symbol;
+    std::random_device rd;
+    std::mt19937 gen;
+
+public:
+    Enemy(): symbol{'$'}, gen(rd()) {}
+    Enemy(int x, int y, char symbol) : x(x), y(y), symbol(symbol), gen(rd()) {}
+    Enemy(const Enemy& other): x{other.x}, y{other.y}, symbol{other.symbol} {}
+
+
+    int getX() const {
+        return x;
+    }
+
+    int getY() const {
+        return y;
+    }
+
+    char getSymbol() const {
+        return symbol;
+    }
+
+    friend std::ostream &operator<<(std::ostream &os, const Enemy &enemy) {
+        os << "x: " << enemy.x << " y: " << enemy.y << " symbol: " << enemy.symbol;
+        return os;
+    }
+
+    void initialize(){
+        std::uniform_int_distribution<> x_dist(1, 60); // Distribution for x coordinates from 1 to 60
+        std::uniform_int_distribution<> y_dist(1, 16); // Distribution for y coordinates from 1 to 16
+        x = x_dist(gen); // Generate random x coordinate
+        y = y_dist(gen); // Generate random y coordinate
+    }
+};
+
+class Wall{
+    int x, y, x_length, y_length;
+    char symbol;
+    std::random_device rd;  // Will be used to obtain a seed for the random number engine
+    std::mt19937 gen;       // Standard mersenne_twister_engine seeded with rd()
+
+public:
+    Wall(): symbol{'#'}, gen(rd()) {}
+    Wall(int x, int y, char symbol) : x(x), y(y), symbol(symbol), gen(rd()) {}
+    Wall(const Wall& other): x{other.x}, y{other.y}, symbol{other.symbol} {}
+
+
+    int getX() const {
+        return x;
+    }
+
+    int getY() const {
+        return y;
+    }
+
+    int getXLength() const {
+        return x_length;
+    }
+
+    int getYLength() const {
+        return y_length;
+    }
+
+    char getSymbol() const {
+        return symbol;
+    }
+
+    void initialize(){
+
+        std::uniform_int_distribution<> x_length_dist(1, 3); // Distribution for x_length from 1 to 3
+        std::uniform_int_distribution<> y_length_dist(1, 10); // Distribution for y_length from 1 to 10
+        x_length = x_length_dist(gen); // Generate random x_length
+        y_length = y_length_dist(gen); // Generate random y_length
+        std::uniform_int_distribution<> x_dist(1, 60-x_length); // Distribution for x coordinates from 1 to 60
+        std::uniform_int_distribution<> y_dist(1, 16-y_length); // Distribution for y coordinates from 1 to 16
+        x = x_dist(gen); // Generate random x coordinate within bounds
+        y = y_dist(gen); // Generate random y coordinate within bounds
+    }
+};
+
+class World{
+    Player player;
+    std::array<Wall, 15> walls;
+    Enemy enemy;
+    std::array<std::string, 18> game_map;
+    int score,lives;
+
+public:
+    World() {}
+
+    World(const Player &player, const std::array<Wall, 15> &walls, const Enemy &enemy, int score, int lives) : player(
+            player), walls(walls), enemy(enemy), score(score), lives(lives) {}
+
+    const Player &getPlayer() const {
+        return player;
+    }
+
+    const std::array<Wall, 15> &getWalls() const {
+        return walls;
+    }
+
+    friend std::ostream &operator<<(std::ostream &os, const World &world) {
+        os << "score: " << world.score << "\nlives: " << world.lives<< "\ngame_map:\n" << world.game_map[0] << "\n"
+                << world.game_map[1] << "\n"
+                << world.game_map[2] << "\n"
+                << world.game_map[3] << "\n"
+                << world.game_map[4] << "\n"
+                << world.game_map[5] << "\n"
+                << world.game_map[6] << "\n"
+                << world.game_map[7] << "\n"
+                << world.game_map[8] << "\n"
+                << world.game_map[9] << "\n"
+                << world.game_map[10] << "\n"
+                << world.game_map[11] << "\n"
+                << world.game_map[12] << "\n"
+                << world.game_map[13] << "\n"
+                << world.game_map[14] << "\n"
+                << world.game_map[15] << "\n"
+                << world.game_map[16] << "\n"
+                << world.game_map[17] << "\n";
+        return os;
+    }
+
+    void initialize(){
+        ///score+lives
+        score=0;
+        lives=3;
+        ///map borders
+        game_map[0]="##############################################################";
+        game_map[17]="##############################################################";
+        for( int i=1;i<=16;i++)
+            game_map[i]="#                                                            #";
+        ///walls
+        for(int i=0;i<15;i++){
+            walls[i].initialize();
+            for(int j=0;j<walls[i].getXLength();j++)
+                for(int k=0;k<walls[i].getYLength();k++)
+                    game_map[walls[i].getY()+j][walls[i].getX()+k] = walls[i].getSymbol();
+        }
+        ///add player and enemy
+        enemy.initialize();
+        game_map[player.getY()][player.getX()] = player.getSymbol();
+        game_map[enemy.getY()][enemy.getX()] = enemy.getSymbol();
+    }
+    void generate(){
+
+    }
+
+};
+
 int main() {
-    std::cout << "Hello, world!\n";
-    std::array<int, 100> v{};
-    int nr;
-    std::cout << "Introduceți nr: ";
-    /////////////////////////////////////////////////////////////////////////
-    /// Observație: dacă aveți nevoie să citiți date de intrare de la tastatură,
-    /// dați exemple de date de intrare folosind fișierul tastatura.txt
-    /// Trebuie să aveți în fișierul tastatura.txt suficiente date de intrare
-    /// (în formatul impus de voi) astfel încât execuția programului să se încheie.
-    /// De asemenea, trebuie să adăugați în acest fișier date de intrare
-    /// pentru cât mai multe ramuri de execuție.
-    /// Dorim să facem acest lucru pentru a automatiza testarea codului, fără să
-    /// mai pierdem timp de fiecare dată să introducem de la zero aceleași date de intrare.
-    ///
-    /// Pe GitHub Actions (bife), fișierul tastatura.txt este folosit
-    /// pentru a simula date introduse de la tastatură.
-    /// Bifele verifică dacă programul are erori de compilare, erori de memorie și memory leaks.
-    ///
-    /// Dacă nu puneți în tastatura.txt suficiente date de intrare, îmi rezerv dreptul să vă
-    /// testez codul cu ce date de intrare am chef și să nu pun notă dacă găsesc vreun bug.
-    /// Impun această cerință ca să învățați să faceți un demo și să arătați părțile din
-    /// program care merg (și să le evitați pe cele care nu merg).
-    ///
-    /////////////////////////////////////////////////////////////////////////
-    std::cin >> nr;
-    /////////////////////////////////////////////////////////////////////////
-    for(int i = 0; i < nr; ++i) {
-        std::cout << "v[" << i << "] = ";
-        std::cin >> v[i];
-    }
-    std::cout << "\n\n";
-    std::cout << "Am citit de la tastatură " << nr << " elemente:\n";
-    for(int i = 0; i < nr; ++i) {
-        std::cout << "- " << v[i] << "\n";
-    }
-    ///////////////////////////////////////////////////////////////////////////
-    /// Pentru date citite din fișier, NU folosiți tastatura.txt. Creați-vă voi
-    /// alt fișier propriu cu ce alt nume doriți.
-    /// Exemplu:
-    /// std::ifstream fis("date.txt");
-    /// for(int i = 0; i < nr2; ++i)
-    ///     fis >> v2[i];
-    ///
-    ///////////////////////////////////////////////////////////////////////////
-    ///                Exemplu de utilizare cod generat                     ///
-    ///////////////////////////////////////////////////////////////////////////
-    Helper helper;
-    helper.help();
-    ///////////////////////////////////////////////////////////////////////////
+
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
+    std::string user;
+    std::cin>>user;
+
+
+    World world;
+    world.initialize();
+
+    std::cout<<world;
     return 0;
 }
