@@ -179,9 +179,45 @@ public:
         game_map[player.getY()][player.getX()] = player.getSymbol();
         game_map[enemy.getY()][enemy.getX()] = enemy.getSymbol();
     }
-    void generate(){
+    void movement(){
+        game_map[player.getY()][player.getX()] = ' ';
+        std::string input;
+        std::cin>>input;
+
+        switch (input[0]) {
+            case 'a': {
+                if(game_map[player.getY()][player.getX()-1] == ' ')
+                    player.move_left();
+                break;
+            }
+            case 'd': {
+                if(game_map[player.getY()][player.getX()+1] == ' ')
+                    player.move_right();
+                break;
+            }
+            case 'w': {
+                if(game_map[player.getY()-1][player.getX()] == ' ')
+                    player.move_up();
+                break;
+            }
+            case 's': {
+                if(game_map[player.getY()+1][player.getX()] == ' ')
+                    player.move_down();
+                break;
+            }
+            default:{
+            }
+                game_map[player.getY()][player.getX()] = player.getSymbol();
+
+        }
 
     }
+    void generate(){
+        movement();
+
+
+    }
+
 
 };
 
