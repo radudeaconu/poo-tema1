@@ -26,9 +26,16 @@ public:
     Player(): x{1}, y{1}, symbol{'o'} {}
     explicit Player(int x_, int y_, char symbol_='o') : x{x_}, y{y_}, symbol(symbol_) {}
     Player(const Player& other): x{other.x}, y{other.y}, symbol{other.symbol} {}
+    Player& operator=(const Player& other){
+        x = other.x;
+        y = other.y;
+        symbol = other.symbol;
+        return *this;
+    }
+    ~Player() {}
 
     friend std::ostream &operator<<(std::ostream &os, const Player &player) {
-        os << "x: " << player.x << " y: " << player.y << " symbol: " << player.symbol;
+        os << "x: " << player.x << " y: " << player.y << " symbol: " << player.symbol<<"\n";
         return os;
     }
     void move_up() {
@@ -58,7 +65,7 @@ class Enemy{
     std::mt19937 gen;
 
 public:
-    Enemy(): symbol{'$'}, gen(rd()) {}
+    Enemy(): x{0}, y{0} ,symbol{'$'}, gen(rd()) {}
     Enemy(int x, int y, char symbol) : x(x), y(y), symbol(symbol), gen(rd()) {}
     Enemy(const Enemy& other): x{other.x}, y{other.y}, symbol{other.symbol} {}
 
@@ -76,7 +83,7 @@ public:
     }
 
     friend std::ostream &operator<<(std::ostream &os, const Enemy &enemy) {
-        os << "x: " << enemy.x << " y: " << enemy.y << " symbol: " << enemy.symbol;
+        os << "x: " << enemy.x << " y: " << enemy.y << " symbol: " << enemy.symbol<<"\n";
         return os;
     }
 
@@ -95,8 +102,8 @@ class Wall{
     std::mt19937 gen;       // Standard mersenne_twister_engine seeded with rd()
 
 public:
-    Wall(): symbol{'#'}, gen(rd()) {}
-    Wall(int x, int y, char symbol) : x(x), y(y), symbol(symbol), gen(rd()) {}
+    Wall(): x{0}, y{0}, x_length{1}, y_length{1}, symbol{'#'}, gen(rd()) {}
+    Wall(int x, int y, int x_length, int y_length, char symbol) : x(x), y(y), x_length(x_length), y_length(y_length), symbol(symbol), gen(rd()) {}
     Wall(const Wall& other): x{other.x}, y{other.y}, symbol{other.symbol} {}
 
 
@@ -151,9 +158,9 @@ public:
         return player;
     }
 
-    const std::array<Wall, 15> &getWalls() const {
-        return walls;
-    }
+//    const std::array<Wall, 15> &getWalls() const {
+//        return walls;
+//    }
 
     friend std::ostream &operator<<(std::ostream &os, const World &world) {
         os << "score: " << world.score << "\nlives: " << world.lives<< "\ngame_map:\n" << world.game_map[0] << "\n"
@@ -231,12 +238,13 @@ public:
                 gata=true;
                 break;
             }
-            default:{
-                std::cout<<"input invalid\n";
+            case 'e':{
+                std::cout<<"Player information: "<<getPlayer()<<"\n";
+                break;
             }
-            std::cout<<"urmeaza\n";
-
-
+            default:{
+                std::cout<<"invalid input\n";
+            }
         }
         game_map[player.getY()][player.getX()] = player.getSymbol();
 
@@ -254,15 +262,27 @@ public:
 
 int main() {
 
+    Player p1;
+    Player p2(2,3,'%'),p3(p1);
+    p3=p2;
+    p2.move_down();
+    p2.move_left();
+    std::cout<<"p2: "<<p2<<"p3: "<<p3;
+
+    Enemy e1;
+    Enemy e2(5,4,'^');
+    e1.initialize();
+    Enemy e3(e1);
+    std::cout<<"e3: "<<e3;
+
+
 
 
 
     World world;
     world.initialize();
-
     std::cout<<world;
     world.generate();
-
 
     return 0;
 }
