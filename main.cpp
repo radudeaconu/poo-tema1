@@ -31,7 +31,25 @@ public:
         os << "x: " << player.x << " y: " << player.y << " symbol: " << player.symbol;
         return os;
     }
+    void move_up() {
+        y--;
+//        dir=NONE;
+    }
+    void move_down() {
+        y++;
+//        dir=NONE;
+    }
+    void move_left() {
+        x--;
+//        dir=NONE;
+    }
+    void move_right() {
+        x++;
+//        dir=NONE;
+    }
+
 };
+
 
 class Enemy{
     int x,y;
@@ -121,6 +139,7 @@ class World{
     Enemy enemy;
     std::array<std::string, 18> game_map;
     int score,lives;
+    bool gata= false;
 
 public:
     World() {}
@@ -183,16 +202,19 @@ public:
         game_map[player.getY()][player.getX()] = ' ';
         std::string input;
         std::cin>>input;
-
         switch (input[0]) {
             case 'a': {
-                if(game_map[player.getY()][player.getX()-1] == ' ')
+                if(game_map[player.getY()][player.getX()-1] == ' ') {
                     player.move_left();
+                    //game_map[player.getY()][player.getX()] = ' ';
+                }
                 break;
             }
             case 'd': {
-                if(game_map[player.getY()][player.getX()+1] == ' ')
+                if(game_map[player.getY()][player.getX()+1] == ' ') {
                     player.move_right();
+                   // game_map[player.getY()][player.getX()] = ' ';
+                }
                 break;
             }
             case 'w': {
@@ -205,16 +227,25 @@ public:
                     player.move_down();
                 break;
             }
-            default:{
+            case 'q':{
+                gata=true;
+                break;
             }
-                game_map[player.getY()][player.getX()] = player.getSymbol();
+            default:{
+                std::cout<<"input invalid\n";
+            }
+            std::cout<<"urmeaza\n";
+
 
         }
+        game_map[player.getY()][player.getX()] = player.getSymbol();
 
     }
     void generate(){
-        movement();
-
+        while(!gata) {
+            movement();
+            std::cout<<*this;
+        }
 
     }
 
@@ -223,15 +254,15 @@ public:
 
 int main() {
 
-    std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
-    std::string user;
-    std::cin>>user;
 
 
     World world;
     world.initialize();
 
     std::cout<<world;
+    world.generate();
+
+
     return 0;
 }
