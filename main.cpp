@@ -3,7 +3,7 @@
 #include <random>
 #include <ctime>
 
-#include <Helper.h>
+//#include <Helper.h>
 
 
 class Player{
@@ -104,7 +104,7 @@ class Wall{
 public:
     Wall(): x{0}, y{0}, x_length{1}, y_length{1}, symbol{'#'}, gen(rd()) {}
     Wall(int x, int y, int x_length, int y_length, char symbol) : x(x), y(y), x_length(x_length), y_length(y_length), symbol(symbol), gen(rd()) {}
-    Wall(const Wall& other): x{other.x}, y{other.y}, symbol{other.symbol} {}
+    Wall(const Wall& other): x{other.x}, y{other.y}, x_length{other.x_length}, y_length{other.y_length}, symbol{other.symbol} {}
 
 
     int getX() const {
@@ -273,7 +273,7 @@ int main() {
     Enemy e2(5,4,'^');
     e1.initialize();
     Enemy e3(e1);
-    std::cout<<"e3: "<<e3;
+    std::cout<<"e2: "<<e2<<"e3: "<<e3;
 
 
 
