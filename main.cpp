@@ -218,7 +218,7 @@ public:
     }
 
     void nextLevel(){
-        //game_map[player.getX()][player.getY()]=' ';
+        //game_map[player.getY()][player.getX()]=' ';
         player.reset();
         initialize();
         score++;
@@ -229,8 +229,10 @@ public:
         //while(kbhit()) {
             switch (key()) {
                 case 'a': {
-                    if (game_map[player.getY()][player.getX() - 1] == enemy.getSymbol())
+                    if (game_map[player.getY()][player.getX() - 1] == enemy.getSymbol()){
                         nextLevel();
+                        break;
+                    }
                     if (game_map[player.getY()][player.getX() - 1] == ' ') {
                         player.move_left();
                         //game_map[player.getY()][player.getX()] = ' ';
@@ -238,8 +240,10 @@ public:
                     break;
                 }
                 case 'd': {
-                    if (game_map[player.getY()][player.getX() + 1] == enemy.getSymbol())
+                    if (game_map[player.getY()][player.getX() + 1] == enemy.getSymbol()){
                         nextLevel();
+                        break;
+                    }
                     if (game_map[player.getY()][player.getX() + 1] == ' ') {
                         player.move_right();
                         // game_map[player.getY()][player.getX()] = ' ';
@@ -247,15 +251,19 @@ public:
                     break;
                 }
                 case 'w': {
-                    if (game_map[player.getY() - 1][player.getX()] == enemy.getSymbol())
+                    if (game_map[player.getY() - 1][player.getX()] == enemy.getSymbol()){
                         nextLevel();
+                        break;
+                    }
                     if (game_map[player.getY() - 1][player.getX()] == ' ')
                         player.move_up();
                     break;
                 }
                 case 's': {
-                    if (game_map[player.getY() + 1][player.getX()] == enemy.getSymbol())
+                    if (game_map[player.getY() + 1][player.getX()] == enemy.getSymbol()){
                         nextLevel();
+                        break;
+                    }
                     if (game_map[player.getY() + 1][player.getX()] == ' ')
                         player.move_down();
                     break;
@@ -264,10 +272,10 @@ public:
                     gata = true;
                     break;
                 }
-                case 'e': {
-                    std::cout << "Player information: " << getPlayer() << "\n";
-                    break;
-                }
+//                case 'e': {
+//                    std::cout << "Player information: " << getPlayer() << "\n";
+//                    break;
+//                }
                 default: {
                     //std::cout << "invalid input\n";
                 }
