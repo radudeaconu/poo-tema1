@@ -2,7 +2,7 @@
 #include <array>
 #include <random>
 #include <ctime>
-
+#include "rlutil.h"
 //#include <Helper.h>
 
 
@@ -207,52 +207,57 @@ public:
     }
     void movement(){
         game_map[player.getY()][player.getX()] = ' ';
-        std::string input;
-        std::cin>>input;
-        switch (input[0]) {
-            case 'a': {
-                if(game_map[player.getY()][player.getX()-1] == ' ') {
-                    player.move_left();
-                    //game_map[player.getY()][player.getX()] = ' ';
+        rlutil::cls();
+        while(kbhit()) {
+            switch (getch()) {
+                case 'a': {
+                    if (game_map[player.getY()][player.getX() - 1] == ' ') {
+                        player.move_left();
+                        //game_map[player.getY()][player.getX()] = ' ';
+                    }
+                    break;
                 }
-                break;
-            }
-            case 'd': {
-                if(game_map[player.getY()][player.getX()+1] == ' ') {
-                    player.move_right();
-                   // game_map[player.getY()][player.getX()] = ' ';
+                case 'd': {
+                    if (game_map[player.getY()][player.getX() + 1] == ' ') {
+                        player.move_right();
+                        // game_map[player.getY()][player.getX()] = ' ';
+                    }
+                    break;
                 }
-                break;
-            }
-            case 'w': {
-                if(game_map[player.getY()-1][player.getX()] == ' ')
-                    player.move_up();
-                break;
-            }
-            case 's': {
-                if(game_map[player.getY()+1][player.getX()] == ' ')
-                    player.move_down();
-                break;
-            }
-            case 'q':{
-                gata=true;
-                break;
-            }
-            case 'e':{
-                std::cout<<"Player information: "<<getPlayer()<<"\n";
-                break;
-            }
-            default:{
-                std::cout<<"invalid input\n";
+                case 'w': {
+                    if (game_map[player.getY() - 1][player.getX()] == ' ')
+                        player.move_up();
+                    break;
+                }
+                case 's': {
+                    if (game_map[player.getY() + 1][player.getX()] == ' ')
+                        player.move_down();
+                    break;
+                }
+                case 'q': {
+                    gata = true;
+                    break;
+                }
+                case 'e': {
+                    std::cout << "Player information: " << getPlayer() << "\n";
+                    break;
+                }
+                default: {
+                    std::cout << "invalid input\n";
+                }
             }
         }
         game_map[player.getY()][player.getX()] = player.getSymbol();
 
     }
     void generate(){
+
         while(!gata) {
+
             movement();
+
             std::cout<<*this;
+            //rlutil::cls();
         }
 
     }
@@ -276,7 +281,7 @@ int main() {
     std::cout<<"e2: "<<e2<<"e3: "<<e3;
 
 
-
+    rlutil::cls();
 
 
     World world;
