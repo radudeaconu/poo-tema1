@@ -6,6 +6,15 @@
 //#include <Helper.h>
 
 
+char key() {
+    time_t start = time(NULL);
+    while (!kbhit()) {
+        if (time(NULL) - start >= 0.3)
+            return -1;
+    }
+    return getch();
+}
+
 class Player{
     int x,y;
     char symbol;
@@ -208,8 +217,8 @@ public:
     void movement(){
         game_map[player.getY()][player.getX()] = ' ';
         rlutil::cls();
-        while(kbhit()) {
-            switch (getch()) {
+        //while(kbhit()) {
+            switch (key()) {
                 case 'a': {
                     if (game_map[player.getY()][player.getX() - 1] == ' ') {
                         player.move_left();
@@ -243,10 +252,10 @@ public:
                     break;
                 }
                 default: {
-                    std::cout << "invalid input\n";
+                    //std::cout << "invalid input\n";
                 }
             }
-        }
+        //}
         game_map[player.getY()][player.getX()] = player.getSymbol();
 
     }
@@ -280,6 +289,7 @@ int main() {
     Enemy e3(e1);
     std::cout<<"e2: "<<e2<<"e3: "<<e3;
 
+    rlutil::anykey("press e to continue");
 
     rlutil::cls();
 
