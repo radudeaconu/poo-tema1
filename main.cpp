@@ -272,10 +272,10 @@ public:
                     gata = true;
                     break;
                 }
-//                case 'e': {
-//                    std::cout << "Player information: " << getPlayer() << "\n";
-//                    break;
-//                }
+                case 'e': {
+                    std::cout << "Player information: " << getPlayer() << "\n";
+                    break;
+                }
                 default: {
                     //std::cout << "invalid input\n";
                 }
