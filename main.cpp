@@ -1,20 +1,29 @@
 #include <iostream>
 #include <array>
 #include <random>
-#include <ctime>
-#include <rlutil.h>
+#include <chrono>
+#include "rlutil.h"
 //#include <Helper.h>
 
 
+//char key() {
+//    time_t start = time(NULL);
+//    while (!kbhit()) {
+//        if (time(NULL) - start >= 0.3)
+//            return -1;
+//    }
+//    return getch();
+//}
+
 char key() {
-    time_t start = time(NULL);
+    const auto start = std::chrono::steady_clock::now();
+    using namespace std::chrono_literals;
     while (!kbhit()) {
-        if (time(NULL) - start >= 0.3)
+        if (std::chrono::steady_clock::now() - start >= 0.3s)
             return -1;
     }
     return getch();
 }
-
 class Player{
     int x,y;
     char symbol;
@@ -47,24 +56,13 @@ public:
         os << "x: " << player.x << " y: " << player.y << " symbol: " << player.symbol<<"\n";
         return os;
     }
-    void move_up() {
-        y--;
-//        dir=NONE;
-    }
-    void move_down() {
-        y++;
-//        dir=NONE;
-    }
-    void move_left() {
-        x--;
-//        dir=NONE;
-    }
-    void move_right() {
-        x++;
-//        dir=NONE;
+    void move(int directionX, int directionY) {
+        x=x+directionX;
+        y=y+directionY;
     }
     void reset(){
-        x=1;y=1;
+        x=1;
+        y=1;
     }
 };
 
@@ -74,9 +72,15 @@ class Enemy{
     char symbol;
     std::random_device rd;
     std::mt19937 gen;
+    void initialize(){
+        std::uniform_int_distribution<> x_dist(1, 60); // Distribution for x coordinates from 1 to 60
+        std::uniform_int_distribution<> y_dist(1, 16); // Distribution for y coordinates from 1 to 16
+        x = x_dist(gen); // Generate random x coordinate
+        y = y_dist(gen); // Generate random y coordinate
+    }
 
 public:
-    Enemy(): x{0}, y{0} ,symbol{'$'}, gen(rd()) {}
+    Enemy(): symbol{'$'}, gen(rd()) {initialize();}
     Enemy(int x, int y, char symbol) : x(x), y(y), symbol(symbol), gen(rd()) {}
     Enemy(const Enemy& other): x{other.x}, y{other.y}, symbol{other.symbol} {}
 
@@ -97,13 +101,8 @@ public:
         os << "x: " << enemy.x << " y: " << enemy.y << " symbol: " << enemy.symbol<<"\n";
         return os;
     }
+    friend class World;
 
-    void initialize(){
-        std::uniform_int_distribution<> x_dist(1, 60); // Distribution for x coordinates from 1 to 60
-        std::uniform_int_distribution<> y_dist(1, 16); // Distribution for y coordinates from 1 to 16
-        x = x_dist(gen); // Generate random x coordinate
-        y = y_dist(gen); // Generate random y coordinate
-    }
 };
 
 class Wall{
@@ -112,8 +111,20 @@ class Wall{
     std::random_device rd;  // Will be used to obtain a seed for the random number engine
     std::mt19937 gen;       // Standard mersenne_twister_engine seeded with rd()
 
+    void initialize(){
+
+        std::uniform_int_distribution<> x_length_dist(1, 3); // Distribution for x_length from 1 to 3
+        std::uniform_int_distribution<> y_length_dist(1, 10); // Distribution for y_length from 1 to 10
+        x_length = x_length_dist(gen); // Generate random x_length
+        y_length = y_length_dist(gen); // Generate random y_length
+        std::uniform_int_distribution<> x_dist(1, 60-x_length); // Distribution for x coordinates from 1 to 60
+        std::uniform_int_distribution<> y_dist(1, 16-y_length); // Distribution for y coordinates from 1 to 16
+        x = x_dist(gen); // Generate random x coordinate within bounds
+        y = y_dist(gen); // Generate random y coordinate within bounds
+    }
+
 public:
-    Wall(): x{0}, y{0}, x_length{1}, y_length{1}, symbol{'#'}, gen(rd()) {}
+    Wall(): symbol{'#'}, gen(rd()) {initialize();}
     Wall(int x, int y, int x_length, int y_length, char symbol) : x(x), y(y), x_length(x_length), y_length(y_length), symbol(symbol), gen(rd()) {}
     Wall(const Wall& other): x{other.x}, y{other.y}, x_length{other.x_length}, y_length{other.y_length}, symbol{other.symbol} {}
 
@@ -137,18 +148,8 @@ public:
     char getSymbol() const {
         return symbol;
     }
+    friend class World;
 
-    void initialize(){
-
-        std::uniform_int_distribution<> x_length_dist(1, 3); // Distribution for x_length from 1 to 3
-        std::uniform_int_distribution<> y_length_dist(1, 10); // Distribution for y_length from 1 to 10
-        x_length = x_length_dist(gen); // Generate random x_length
-        y_length = y_length_dist(gen); // Generate random y_length
-        std::uniform_int_distribution<> x_dist(1, 60-x_length); // Distribution for x coordinates from 1 to 60
-        std::uniform_int_distribution<> y_dist(1, 16-y_length); // Distribution for y coordinates from 1 to 16
-        x = x_dist(gen); // Generate random x coordinate within bounds
-        y = y_dist(gen); // Generate random y coordinate within bounds
-    }
 };
 
 class World{
@@ -159,8 +160,33 @@ class World{
     int score=0,lives;
     bool gata= false;
 
+    void initialize(){
+        ///score+lives
+        score=0;
+        lives=3;
+        generate();
+
+    }
+    void generate(){
+        ///map borders
+        game_map[0]="##############################################################";
+        game_map[17]="##############################################################";
+        for( int i=1;i<=16;i++)
+            game_map[i]="#                                                            #";
+        ///walls
+        for(int i=0;i<15;i++){
+            walls[i].initialize();
+            for(int j=0;j<walls[i].getXLength();j++)
+                for(int k=0;k<walls[i].getYLength();k++)
+                    game_map[walls[i].getY()+j][walls[i].getX()+k] = walls[i].getSymbol();
+        }
+        ///add player and enemy
+        enemy.initialize();
+        game_map[player.getY()][player.getX()] = player.getSymbol();
+        game_map[enemy.getY()][enemy.getX()] = enemy.getSymbol();
+    }
 public:
-    World() {}
+    World() {initialize();}
 
     World(const Player &player, const std::array<Wall, 15> &walls, const Enemy &enemy, int score, int lives) : player(
             player), walls(walls), enemy(enemy), score(score), lives(lives) {}
@@ -195,103 +221,106 @@ public:
         return os;
     }
 
-    void initialize(){
-        ///score+lives
-        //score=0;
-        lives=3;
-        ///map borders
-        game_map[0]="##############################################################";
-        game_map[17]="##############################################################";
-        for( int i=1;i<=16;i++)
-            game_map[i]="#                                                            #";
-        ///walls
-        for(int i=0;i<15;i++){
-            walls[i].initialize();
-            for(int j=0;j<walls[i].getXLength();j++)
-                for(int k=0;k<walls[i].getYLength();k++)
-                    game_map[walls[i].getY()+j][walls[i].getX()+k] = walls[i].getSymbol();
-        }
-        ///add player and enemy
-        enemy.initialize();
-        game_map[player.getY()][player.getX()] = player.getSymbol();
-        game_map[enemy.getY()][enemy.getX()] = enemy.getSymbol();
-    }
-
     void nextLevel(){
         //game_map[player.getY()][player.getX()]=' ';
         player.reset();
-        initialize();
+        generate();
         score++;
     }
     void movement(){
         game_map[player.getY()][player.getX()] = ' ';
         rlutil::cls();
         //while(kbhit()) {
-            switch (key()) {
-                case 'a': {
-                    if (game_map[player.getY()][player.getX() - 1] == enemy.getSymbol()){
-                        nextLevel();
-                        break;
-                    }
-                    if (game_map[player.getY()][player.getX() - 1] == ' ') {
-                        player.move_left();
-                        //game_map[player.getY()][player.getX()] = ' ';
-                    }
-                    break;
-                }
-                case 'd': {
-                    if (game_map[player.getY()][player.getX() + 1] == enemy.getSymbol()){
-                        nextLevel();
-                        break;
-                    }
-                    if (game_map[player.getY()][player.getX() + 1] == ' ') {
-                        player.move_right();
-                        // game_map[player.getY()][player.getX()] = ' ';
-                    }
-                    break;
-                }
-                case 'w': {
-                    if (game_map[player.getY() - 1][player.getX()] == enemy.getSymbol()){
-                        nextLevel();
-                        break;
-                    }
-                    if (game_map[player.getY() - 1][player.getX()] == ' ')
-                        player.move_up();
-                    break;
-                }
-                case 's': {
-                    if (game_map[player.getY() + 1][player.getX()] == enemy.getSymbol()){
-                        nextLevel();
-                        break;
-                    }
-                    if (game_map[player.getY() + 1][player.getX()] == ' ')
-                        player.move_down();
-                    break;
-                }
-                case 'q': {
-                    gata = true;
-                    break;
-                }
-                case 'e': {
-                    std::cout << "Player information: " << getPlayer() << "\n";
-                    break;
-                }
-                default: {
-                    //std::cout << "invalid input\n";
-                }
-            }
-        //}
-        game_map[player.getY()][player.getX()] = player.getSymbol();
+//            switch (key()) {
+//                case 'a': {
+//                    if (game_map[player.getY()][player.getX() - 1] == enemy.getSymbol()){
+//                        nextLevel();
+//                        break;
+//                    }
+//                    if (game_map[player.getY()][player.getX() - 1] == ' ') {
+//                        player.move_left();
+//                        //game_map[player.getY()][player.getX()] = ' ';
+//                    }
+//                    break;
+//                }
+//                case 'd': {
+//                    if (game_map[player.getY()][player.getX() + 1] == enemy.getSymbol()){
+//                        nextLevel();
+//                        break;
+//                    }
+//                    if (game_map[player.getY()][player.getX() + 1] == ' ') {
+//                        player.move_right();
+//                        // game_map[player.getY()][player.getX()] = ' ';
+//                    }
+//                    break;
+//                }
+//                case 'w': {
+//                    if (game_map[player.getY() - 1][player.getX()] == enemy.getSymbol()){
+//                        nextLevel();
+//                        break;
+//                    }
+//                    if (game_map[player.getY() - 1][player.getX()] == ' ')
+//                        player.move_up();
+//                    break;
+//                }
+//                case 's': {
+//                    if (game_map[player.getY() + 1][player.getX()] == enemy.getSymbol()){
+//                        nextLevel();
+//                        break;
+//                    }
+//                    if (game_map[player.getY() + 1][player.getX()] == ' ')
+//                        player.move_down();
+//                    break;
+//                }
+//                case 'q': {
+//                    gata = true;
+//                    break;
+//                }
+//                case 'e': {
+//                    std::cout << "Player information: " << getPlayer() << "\n";
+//                    break;
+//                }
+//                default: {
+//                    //std::cout << "invalid input\n";
+//                }
+//            }
+//        //}
+        int directionX = 0, directionY = 0;
 
+        switch(key()) {
+            case 'a':
+                directionX = -1;
+                break;
+            case 'd':
+                directionX = +1;
+                break;
+            case 's':
+                directionY = +1;
+                break;
+            case 'w':
+                directionY = -1;
+                break;
+            case 'q':
+                gata = true;
+                break;
+        }
+
+        int nextX = player.getX() + directionX;
+        int nextY = player.getY() + directionY;
+
+        if(game_map[nextY][nextX] == enemy.getSymbol())
+            nextLevel();
+        else if(game_map[nextY][nextX] == ' ')
+            player.move(directionX, directionY);
+        game_map[player.getY()][player.getX()] = player.getSymbol();
     }
-    void generate(){
+    void play(){
 
         while(!gata) {
 
             movement();
 
             std::cout<<*this;
-            //rlutil::cls();
         }
 
     }
@@ -304,13 +333,12 @@ int main() {
     Player p1;
     Player p2(2,3,'%'),p3(p1);
     p3=p2;
-    p2.move_down();
-    p2.move_left();
+    p2.move(-1,0);
+    p2.move(0,1);
     std::cout<<"p2: "<<p2<<"p3: "<<p3;
 
     Enemy e1;
     Enemy e2(5,4,'^');
-    e1.initialize();
     Enemy e3(e1);
     std::cout<<"e2: "<<e2<<"e3: "<<e3;
 
@@ -320,9 +348,9 @@ int main() {
 
 
     World world;
-    world.initialize();
+    //world.initialize();
     std::cout<<world;
-    world.generate();
+    world.play();
 
     return 0;
 }
