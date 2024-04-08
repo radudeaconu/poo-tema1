@@ -1,4 +1,13 @@
-# Nu primesc notă pentru că nu am pus titlu și descriere
+# Console explorer
+
+Este un joc în consolă în care momentan trebuie să prinzi inamicul($), dar sper să devină ceva mai greu odată ce voi
+adăiga mai multe funcționalități.
+
+Nivelele sunt generate la infinit și fiecare nivel este generat random.
+
+
+Jocul începe după ce apeși E. 
+Te poți mișca folosind WASD și poți opri jocul apăsând Q.
 
 ### Important!
 Aveți voie cu cod generat de modele de limbaj la care nu ați contribuit semnificativ doar în folder-ul `generated`.
