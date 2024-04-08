@@ -348,6 +348,9 @@ int main() {
 
 
     World world;
+
+    std::cout<<world.getPlayer();
+
     //world.initialize();
     std::cout<<world;
     world.play();
