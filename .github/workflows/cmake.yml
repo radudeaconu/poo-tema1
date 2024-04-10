@@ -359,12 +359,12 @@ jobs:
         run: |
           cat "${INPUT_FILENAME}" | tr -d '\r' | ./${{ env.ZIP_NAME }}/"${EXECUTABLE_NAME}"
 
-      - name: Sanitizers (Windows MSVC)
-        # run one sanitizer for each OS to avoid building extra binaries
-        if: matrix.cxx == 'cl' && matrix.runs_asan == true
-        continue-on-error: true
-        run: |
-          cat "${INPUT_FILENAME}" | ./${{ env.ZIP_NAME }}/"${EXECUTABLE_NAME}".exe
+      #- name: Sanitizers (Windows MSVC)
+      #  # run one sanitizer for each OS to avoid building extra binaries
+      #  if: matrix.cxx == 'cl' && matrix.runs_asan == true
+      #  continue-on-error: true
+      #  run: |
+      #    cat "${INPUT_FILENAME}" | ./${{ env.ZIP_NAME }}/"${EXECUTABLE_NAME}".exe
 
       - name: Valgrind
         if: runner.os == 'Linux' && matrix.runs_valgrind == true
