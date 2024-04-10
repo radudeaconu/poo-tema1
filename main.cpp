@@ -2,7 +2,7 @@
 #include <array>
 #include <random>
 #include <chrono>
-#include <rlutil.h>
+#include "rlutil.h"
 //#include <Helper.h>
 
 
@@ -72,18 +72,17 @@ class Enemy{
     char symbol;
     std::random_device rd;
     std::mt19937 gen;
+
+public:
+    Enemy(): symbol{'$'}, gen(rd()) {initialize();}
+    Enemy(int x, int y, char symbol) : x(x), y(y), symbol(symbol), gen(rd()) {}
+    Enemy(const Enemy& other): x{other.x}, y{other.y}, symbol{other.symbol} {}
     void initialize(){
         std::uniform_int_distribution<> x_dist(1, 60); // Distribution for x coordinates from 1 to 60
         std::uniform_int_distribution<> y_dist(1, 16); // Distribution for y coordinates from 1 to 16
         x = x_dist(gen); // Generate random x coordinate
         y = y_dist(gen); // Generate random y coordinate
     }
-
-public:
-    Enemy(): symbol{'$'}, gen(rd()) {initialize();}
-    Enemy(int x, int y, char symbol) : x(x), y(y), symbol(symbol), gen(rd()) {}
-    Enemy(const Enemy& other): x{other.x}, y{other.y}, symbol{other.symbol} {}
-
 
     int getX() const {
         return x;
@@ -101,7 +100,6 @@ public:
         os << "x: " << enemy.x << " y: " << enemy.y << " symbol: " << enemy.symbol<<"\n";
         return os;
     }
-    friend class World;
 
 };
 
@@ -110,6 +108,11 @@ class Wall{
     char symbol;
     std::random_device rd;  // Will be used to obtain a seed for the random number engine
     std::mt19937 gen;       // Standard mersenne_twister_engine seeded with rd()
+
+public:
+    Wall(): symbol{'#'}, gen(rd()) {initialize();}
+    Wall(int x, int y, int x_length, int y_length, char symbol) : x(x), y(y), x_length(x_length), y_length(y_length), symbol(symbol), gen(rd()) {}
+    Wall(const Wall& other): x{other.x}, y{other.y}, x_length{other.x_length}, y_length{other.y_length}, symbol{other.symbol} {}
 
     void initialize(){
 
@@ -122,13 +125,6 @@ class Wall{
         x = x_dist(gen); // Generate random x coordinate within bounds
         y = y_dist(gen); // Generate random y coordinate within bounds
     }
-
-public:
-    Wall(): symbol{'#'}, gen(rd()) {initialize();}
-    Wall(int x, int y, int x_length, int y_length, char symbol) : x(x), y(y), x_length(x_length), y_length(y_length), symbol(symbol), gen(rd()) {}
-    Wall(const Wall& other): x{other.x}, y{other.y}, x_length{other.x_length}, y_length{other.y_length}, symbol{other.symbol} {}
-
-
     int getX() const {
         return x;
     }
@@ -148,7 +144,6 @@ public:
     char getSymbol() const {
         return symbol;
     }
-    friend class World;
 
 };
 
