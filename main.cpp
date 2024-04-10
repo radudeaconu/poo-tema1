@@ -2,7 +2,7 @@
 #include <array>
 #include <random>
 #include <chrono>
-#include <rlutil.h>
+#include "rlutil.h"
 //#include <Helper.h>
 
 
@@ -113,8 +113,8 @@ class Wall{
 
     void initialize(){
 
-        std::uniform_int_distribution<> x_length_dist(1, 3); // Distribution for x_length from 1 to 3
-        std::uniform_int_distribution<> y_length_dist(1, 10); // Distribution for y_length from 1 to 10
+        std::uniform_int_distribution<> x_length_dist(1, 10); // Distribution for x_length from 1 to 3
+        std::uniform_int_distribution<> y_length_dist(1, 3); // Distribution for y_length from 1 to 10
         x_length = x_length_dist(gen); // Generate random x_length
         y_length = y_length_dist(gen); // Generate random y_length
         std::uniform_int_distribution<> x_dist(1, 60-x_length); // Distribution for x coordinates from 1 to 60
@@ -178,7 +178,7 @@ class World{
             walls[i].initialize();
             for(int j=0;j<walls[i].getXLength();j++)
                 for(int k=0;k<walls[i].getYLength();k++)
-                    game_map[walls[i].getY()+j][walls[i].getX()+k] = walls[i].getSymbol();
+                    game_map[walls[i].getY()+k][walls[i].getX()+j] = walls[i].getSymbol();
         }
         ///add player and enemy
         enemy.initialize();
