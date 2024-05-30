@@ -15,6 +15,24 @@
 //    return getch();
 //}
 
+class Entity{
+protected:
+    int x, y;
+    char symbol;
+
+public:
+    int getX() const {
+        return x;
+    }
+    int getY() const {
+        return y;
+    }
+    char getSymbol() const {
+        return symbol;
+    }
+
+};
+
 char key() {
     const auto start = std::chrono::steady_clock::now();
     using namespace std::chrono_literals;
@@ -52,6 +70,14 @@ public:
     }
     ~Player() {}
 
+    // Metoda swap
+    friend void swap(Player& first, Player& second) {
+        using std::swap;
+        swap(first.x, second.x);
+        swap(first.y, second.y);
+        // Swap alte membri dacă există
+    }
+
     friend std::ostream &operator<<(std::ostream &os, const Player &player) {
         os << "x: " << player.x << " y: " << player.y << " symbol: " << player.symbol<<"\n";
         return os;
@@ -77,12 +103,15 @@ public:
     Enemy(): symbol{'$'}, gen(rd()) {initialize();}
     Enemy(int x, int y, char symbol) : x(x), y(y), symbol(symbol), gen(rd()) {}
     Enemy(const Enemy& other): x{other.x}, y{other.y}, symbol{other.symbol} {}
+
+
     void initialize(){
         std::uniform_int_distribution<> x_dist(1, 60); // Distribution for x coordinates from 1 to 60
         std::uniform_int_distribution<> y_dist(1, 16); // Distribution for y coordinates from 1 to 16
         x = x_dist(gen); // Generate random x coordinate
         y = y_dist(gen); // Generate random y coordinate
     }
+
 
     int getX() const {
         return x;
@@ -94,6 +123,14 @@ public:
 
     char getSymbol() const {
         return symbol;
+    }
+    void moveRandomly() {
+        std::uniform_int_distribution<> dir(-1, 1); // Random direction -1, 0, or 1 for both x and y
+        int moveX = dir(gen);
+        int moveY = dir(gen);
+        x += moveX;
+        y += moveY;
+
     }
 
     friend std::ostream &operator<<(std::ostream &os, const Enemy &enemy) {
@@ -222,64 +259,12 @@ public:
         generate();
         score++;
     }
-    void movement(){
+    char checkPosition(int x, int y){
+        return game_map[y][x];
+    }
+    void playerMovement(){
         game_map[player.getY()][player.getX()] = ' ';
         rlutil::cls();
-        //while(kbhit()) {
-//            switch (key()) {
-//                case 'a': {
-//                    if (game_map[player.getY()][player.getX() - 1] == enemy.getSymbol()){
-//                        nextLevel();
-//                        break;
-//                    }
-//                    if (game_map[player.getY()][player.getX() - 1] == ' ') {
-//                        player.move_left();
-//                        //game_map[player.getY()][player.getX()] = ' ';
-//                    }
-//                    break;
-//                }
-//                case 'd': {
-//                    if (game_map[player.getY()][player.getX() + 1] == enemy.getSymbol()){
-//                        nextLevel();
-//                        break;
-//                    }
-//                    if (game_map[player.getY()][player.getX() + 1] == ' ') {
-//                        player.move_right();
-//                        // game_map[player.getY()][player.getX()] = ' ';
-//                    }
-//                    break;
-//                }
-//                case 'w': {
-//                    if (game_map[player.getY() - 1][player.getX()] == enemy.getSymbol()){
-//                        nextLevel();
-//                        break;
-//                    }
-//                    if (game_map[player.getY() - 1][player.getX()] == ' ')
-//                        player.move_up();
-//                    break;
-//                }
-//                case 's': {
-//                    if (game_map[player.getY() + 1][player.getX()] == enemy.getSymbol()){
-//                        nextLevel();
-//                        break;
-//                    }
-//                    if (game_map[player.getY() + 1][player.getX()] == ' ')
-//                        player.move_down();
-//                    break;
-//                }
-//                case 'q': {
-//                    gata = true;
-//                    break;
-//                }
-//                case 'e': {
-//                    std::cout << "Player information: " << getPlayer() << "\n";
-//                    break;
-//                }
-//                default: {
-//                    //std::cout << "invalid input\n";
-//                }
-//            }
-//        //}
         int directionX = 0, directionY = 0;
 
         switch(key()) {
@@ -302,18 +287,30 @@ public:
 
         int nextX = player.getX() + directionX;
         int nextY = player.getY() + directionY;
+        switch (checkPosition(nextX,nextY)){
+            case '$':
+                nextLevel();
+                break;
+            case ' ':
+                player.move(directionX, directionY);
+                break;
+            case '#':
+                break;
 
-        if(game_map[nextY][nextX] == enemy.getSymbol())
-            nextLevel();
-        else if(game_map[nextY][nextX] == ' ')
-            player.move(directionX, directionY);
+        }
+//        if(game_map[nextY][nextX] == enemy.getSymbol())
+//            nextLevel();
+//        else if(game_map[nextY][nextX] == ' ')
+//            player.move(directionX, directionY);
         game_map[player.getY()][player.getX()] = player.getSymbol();
     }
+
+
     void play(){
 
         while(!gata) {
 
-            movement();
+            playerMovement();
 
             std::cout<<*this;
         }
