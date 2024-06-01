@@ -16,7 +16,7 @@ public:
 };
 class FireError : public InterestingError {
 public:
-    explicit FireError() : InterestingError("") {};
+    explicit FireError() : InterestingError("deja ai tras!") {};
 };
 
 

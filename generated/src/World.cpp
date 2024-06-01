@@ -148,7 +148,7 @@ void World::playerMovement() {
                 game_map[player.getGun().getY()][player.getGun().getX()]=player.getGun().getSymbol();
             }
             catch (FireError &err){
-                std::cout<<"deja ai tras!";
+                std::cout<<err.what();
             }
             break;
         case 'q':
