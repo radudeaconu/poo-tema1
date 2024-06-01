@@ -13,6 +13,7 @@ public:
     int getX() const;
     int getY() const;
     char getSymbol() const;
+    virtual void initialize() = 0;
     Entity() {}
 
     Entity( int _x, int _y, char _symbol);

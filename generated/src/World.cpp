@@ -5,7 +5,8 @@
 
 
 
-void World::initialize() {
+void World::initialize(char icon) {
+    this->player=Player(icon);
     ///score+lives
     score=0;
     lives=3;
@@ -15,10 +16,10 @@ void World::initialize() {
 
 void World::generate() {
     ///map borders
-    game_map[0]="##############################################################";
-    game_map[17]="##############################################################";
+    game_map[0]="HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH";
+    game_map[17]="HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH";
     for( int i=1;i<=16;i++)
-        game_map[i]="#                                                            #";
+        game_map[i]="H                                                            H";
     ///walls
     for(int i=0;i<15;i++){
         walls[i].initialize();
@@ -32,7 +33,9 @@ void World::generate() {
     game_map[enemy.getY()][enemy.getX()] = enemy.getSymbol();
 }
 
-World::World() {initialize();}
+World::World(char icon) {initialize(icon);}
+
+World::World() {initialize('o');}
 
 World::World(const Player &player, const std::array<Wall, 15> &walls, const Enemy &enemy, int score, int lives) : player(
         player), walls(walls), enemy(enemy), score(score), lives(lives) {}
@@ -75,7 +78,7 @@ char key() {
 
 void World::nextLevel() {
     //game_map[player.getY()][player.getX()]=' ';
-    player.reset();
+    player.initialize();
     generate();
     score++;
 }

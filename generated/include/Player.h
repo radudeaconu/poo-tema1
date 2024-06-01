@@ -12,7 +12,7 @@
 class Player: public Entity{
 
 public:
-
+    explicit Player(char symbol);
     Player(int x=1, int y=1, char symbol='o');
     Player(const Player& other);
     Player& operator=(const Player& other);
@@ -23,7 +23,7 @@ public:
 
     friend std::ostream &operator<<(std::ostream &os, const Player &player);
     void move(int directionX, int directionY);
-    void reset();
+    void initialize() override;
 };
 
 #endif //OOP_PLAYER_H

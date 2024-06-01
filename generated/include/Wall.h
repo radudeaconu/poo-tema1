@@ -19,7 +19,7 @@ public:
     Wall(int x, int y, char symbol, int x_length, int y_length);
     Wall(const Wall& other);
 
-    void initialize();
+    void initialize() override;
 
     int getXLength() const;
 

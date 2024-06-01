@@ -24,9 +24,12 @@ class World{
     int score=0,lives;
     bool gata= false;
 
-    void initialize();
+    void initialize(char icon);
     void generate();
 public:
+
+    explicit World(char icon);
+
     World();
 
     World(const Player &player, const std::array<Wall, 15> &walls, const Enemy &enemy, int score, int lives);

@@ -28,15 +28,18 @@ int main() {
     Enemy e2(5,4,'^');
     Enemy e3(e1);
     std::cout<<"e2: "<<e2<<"e3: "<<e3;
+    char icon;
 
-    rlutil::anykey("press e to continue");
+    std::cout<<"select (by pressing) the character for your player icon...";
+    icon = getch();
+    std::cout<<"\n\nyou selected: "<<icon;
+    rlutil::anykey("\n\npress e to continue");
 
     rlutil::cls();
 
-    World world;
-
+    World world((char)icon);
     std::cout<<world.getPlayer();
-
+    rlutil::anykey();
     //world.initialize();
     std::cout<<world;
     world.play();

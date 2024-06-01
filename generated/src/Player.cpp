@@ -2,6 +2,9 @@
 // Created by Owner on 6/1/2024.
 //
 #include "Player.h"
+
+Player::Player(char symbol) : Entity(1,1, symbol){}
+
 Player::Player(int x, int y, char symbol) : Entity(x, y, symbol) {}
 
 Player::Player(const Player &other) : Entity(dynamic_cast<const Entity&> (other)) {}
@@ -30,7 +33,7 @@ void Player::move(int directionX, int directionY) {
     y=y+directionY;
 }
 
-void Player::reset() {
+void Player::initialize() {
     x=1;
     y=1;
 }

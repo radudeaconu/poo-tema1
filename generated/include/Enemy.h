@@ -21,7 +21,7 @@ public:
 
     ~Enemy() override;
 
-    void initialize();
+    void initialize() override;
 
     void moveRandomly();
 

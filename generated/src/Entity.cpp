@@ -20,3 +20,5 @@ Entity::Entity(int _x, int _y, char _symbol) : x(_x), y(_y), symbol(_symbol) {}
 Entity::Entity(char _symbol) : symbol(_symbol) {}
 
 Entity::Entity(const Entity &other) = default;
+
+
