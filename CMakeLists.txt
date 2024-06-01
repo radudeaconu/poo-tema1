@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.22)
 
 # NOTE: update executable name in .github/workflows/cmake.yml:25 when changing executable name in this file
 # for now, the project name is used as the executable name
@@ -91,7 +91,20 @@ endfunction()
 
 # NOTE: update executable name in .github/workflows/cmake.yml:25 when changing name here
 add_executable(${PROJECT_NAME} main.cpp
-        generated/src/Helper.cpp)
+        generated/src/Helper.cpp
+        generated/include/Entity.h
+        generated/include/Entity.h
+        generated/src/Entity.cpp
+        generated/src/Entity.cpp
+        generated/include/Player.h
+        generated/src/Player.cpp
+        generated/include/Enemy.h
+        generated/src/Enemy.cpp
+        generated/include/Wall.h
+        generated/src/Wall.cpp
+        generated/include/World.h
+        generated/src/World.cpp
+)
 
 ###############################################################################
 
