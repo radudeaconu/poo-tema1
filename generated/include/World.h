@@ -42,6 +42,8 @@ public:
     char checkPosition(int x, int y);
     void playerMovement();
     void play();
+
+    void enemyMovement();
 };
 
 

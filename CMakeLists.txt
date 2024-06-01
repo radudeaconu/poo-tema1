@@ -104,6 +104,8 @@ add_executable(${PROJECT_NAME} main.cpp
         generated/src/Wall.cpp
         generated/include/World.h
         generated/src/World.cpp
+        generated/src/NonPlayerEntity.cpp
+        generated/include/NonPlayerEntity.h
 )
 
 ###############################################################################

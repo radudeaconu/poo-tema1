@@ -18,13 +18,17 @@ void Enemy::initialize() {
     y = y_dist(gen); // Generate random y coordinate
 }
 
-void Enemy::moveRandomly() {
-    std::uniform_int_distribution<> dir(-1, 1); // Random direction -1, 0, or 1 for both x and y
-    int moveX = dir(gen);
-    int moveY = dir(gen);
-    x += moveX;
-    y += moveY;
+int Enemy::randomMovement() {
+    std::uniform_int_distribution<> dir(-2, 2); // Random direction -1, 0, or 1 for both x and y
+    int move = dir(gen);
+    if(move % 2 == 0)
+        move /= 2;
+    return move;
+}
+void Enemy::move(int directionX, int directionY) {
 
+    x=x+directionX;
+    y=y+directionY;
 }
 
 std::ostream &operator<<(std::ostream &os, const Enemy &enemy) {

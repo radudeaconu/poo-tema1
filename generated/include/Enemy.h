@@ -23,7 +23,10 @@ public:
 
     void initialize() override;
 
-    void moveRandomly();
+    void move(int directionX, int directionY);
+
+    int randomMovement();
+
 
     friend std::ostream &operator<<(std::ostream &os, const Enemy &enemy);
 

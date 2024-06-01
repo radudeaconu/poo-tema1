@@ -129,13 +129,22 @@ void World::playerMovement() {
 //            player.move(directionX, directionY);
     game_map[player.getY()][player.getX()] = player.getSymbol();
 }
+void World::enemyMovement(){
+    game_map[enemy.getY()][enemy.getX()] = ' ';
+    int moveX = enemy.randomMovement();
+    int moveY = enemy.randomMovement();
+    if(checkPosition(enemy.getX() + moveX, enemy.getY() + moveY) == ' '){
+        enemy.move(moveX, moveY);
+    }
+    game_map[enemy.getY()][enemy.getX()] = enemy.getSymbol();
+}
 
 void World::play() {
 
     while(!gata) {
 
         playerMovement();
-
+        enemyMovement();
         std::cout<<*this;
     }
 
