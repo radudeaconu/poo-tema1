@@ -3,9 +3,15 @@
 //
 #include "Player.h"
 
-Player::Player(char symbol) : Entity(1,1, symbol){}
+Player::Player(char symbol) : Entity(1,1, symbol){
+    if(symbol == '$' || symbol == '#' || symbol == 'H')
+        throw NameError(symbol);
+}
 
-Player::Player(int x, int y, char symbol) : Entity(x, y, symbol) {}
+Player::Player(int x, int y, char symbol) : Entity(x, y, symbol) {
+    if(symbol == '$' || symbol == '#' || symbol == 'H')
+        throw NameError(symbol);
+}
 
 Player::Player(const Player &other) : Entity(dynamic_cast<const Entity&> (other)) {}
 

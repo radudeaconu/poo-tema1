@@ -106,6 +106,7 @@ add_executable(${PROJECT_NAME} main.cpp
         generated/src/World.cpp
         generated/src/NonPlayerEntity.cpp
         generated/include/NonPlayerEntity.h
+        generated/include/Exception.h
 )
 
 ###############################################################################

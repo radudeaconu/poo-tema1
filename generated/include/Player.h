@@ -7,7 +7,7 @@
 
 #include <ostream>
 #include "Entity.h"
-
+#include "Exception.h"
 
 class Player: public Entity{
 

@@ -28,21 +28,28 @@ int main() {
     Enemy e2(5,4,'^');
     Enemy e3(e1);
     std::cout<<"e2: "<<e2<<"e3: "<<e3;
-    char icon;
+    try {
+        char icon;
 
-    std::cout<<"select (by pressing) the character for your player icon...";
-    icon = getch();
-    std::cout<<"\n\nyou selected: "<<icon;
-    rlutil::anykey("\n\npress e to continue");
+        std::cout << "select (by pressing) the character for your player icon...";
+        icon = getch();
+        std::cout << "\n\nyou selected: " << icon;
+        rlutil::anykey("\n\npress e to continue\n\n");
 
-    rlutil::cls();
+        World world((char) icon);
 
-    World world((char)icon);
-    std::cout<<world.getPlayer();
-    rlutil::anykey();
-    //world.initialize();
-    std::cout<<world;
-    world.play();
+        rlutil::cls();
+
+        //World world((char) icon);
+        std::cout << world.getPlayer();
+        rlutil::anykey();
+        //world.initialize();
+        std::cout << world;
+        world.play();
+    }
+    catch (NameError& err){
+        std::cout<< err.what();
+    }
 
     return 0;
 }
