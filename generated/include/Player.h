@@ -9,7 +9,23 @@
 #include "Entity.h"
 #include "Exception.h"
 
+class Gun: public Entity{
+    bool isFired = false;
+
+public:
+    Gun(int x = 0, int y = 0, char symbol = '-', bool isFired = false);
+    Gun(const Gun& other) = default;
+    ~Gun() override = default;
+    void initialize() override;
+    void fire(int _x, int _y);
+    bool getIsFired();
+    void move();
+
+};
+
+
 class Player: public Entity{
+    Gun gun;
 
 public:
     explicit Player(char symbol);
@@ -24,6 +40,9 @@ public:
     friend std::ostream &operator<<(std::ostream &os, const Player &player);
     void move(int directionX, int directionY);
     void initialize() override;
+    void fire();
+    Gun& getGun();
 };
+
 
 #endif //OOP_PLAYER_H

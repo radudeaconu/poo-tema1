@@ -14,6 +14,10 @@ class NameError : public InterestingError {
 public:
     explicit NameError(char symbol) : InterestingError("alege alt simbol\n") {};
 };
+class FireError : public InterestingError {
+public:
+    explicit FireError() : InterestingError("") {};
+};
 
 
 #endif //OOP_EXCEPTION_H

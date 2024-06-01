@@ -42,5 +42,35 @@ void Player::move(int directionX, int directionY) {
 void Player::initialize() {
     x=1;
     y=1;
+    gun.initialize();
+}
+void Player::fire(){
+    gun.fire(x+1, y);
+}
+Gun& Player::getGun() {
+    return gun;
 }
 
+Gun::Gun(int x, int y, char symbol, bool isFired): Entity(x, y, symbol), isFired(isFired){}
+
+
+void Gun::fire(int _x, int _y) {
+    if(isFired)
+        throw FireError();
+    x = _x;
+    y = _y;
+    isFired = true;
+}
+
+bool Gun::getIsFired(){
+    return isFired;
+}
+
+void Gun::move(){
+    x+=3;
+}
+void Gun::initialize() {
+    x=0;
+    y=0;
+    isFired=false;
+}

@@ -9,7 +9,8 @@ void World::initialize(char icon) {
     this->player=Player(icon);
     ///score+lives
     score=0;
-    lives=3;
+    //lives=3;
+    enemy.initialize();
     generate();
 
 }
@@ -28,7 +29,7 @@ void World::generate() {
                 game_map[walls[i].getY()+k][walls[i].getX()+j] = walls[i].getSymbol();
     }
     ///add player and enemy
-    enemy.initialize();
+
     game_map[player.getY()][player.getX()] = player.getSymbol();
     game_map[enemy.getY()][enemy.getX()] = enemy.getSymbol();
 }
@@ -45,7 +46,7 @@ const Player &World::getPlayer() const {
 }
 
 std::ostream &operator<<(std::ostream &os, const World &world) {
-    os << "score: " << world.score << "\nlives: " << world.lives<< "\ngame_map:\n" << world.game_map[0] << "\n"
+    os << "\nscore: " << world.score/* << "\nlives: " << world.lives*/<< "\ngame_map:\n" << world.game_map[0] << "\n"
        << world.game_map[1] << "\n"
        << world.game_map[2] << "\n"
        << world.game_map[3] << "\n"
@@ -79,6 +80,7 @@ char key() {
 void World::nextLevel() {
     //game_map[player.getY()][player.getX()]=' ';
     player.initialize();
+    enemy.initialize();
     generate();
     score++;
 }
@@ -87,7 +89,42 @@ char World::checkPosition(int x, int y) {
     return game_map[y][x];
 }
 
+void World::gunMovement() {
+    bool clear=true;
+    game_map[player.getGun().getY()][player.getGun().getX()] = ' ';
+    int X=player.getGun().getX();
+    for (int i=1;i<=3;i++){
+        switch(checkPosition(X+i,player.getGun().getY())) {
+            case '#':
+                clear=false;
+                game_map[player.getGun().getY()][X+i]=' ';
+                break;
+            case '$':
+                nextLevel();
+                break;
+            case 'H':
+                clear=false;
+                break;
+            case ' ':
+                break;
+       }
+       if(!clear) break;
+
+    }
+    if(clear){
+        player.getGun().move();
+        game_map[player.getGun().getY()][player.getGun().getX()]=player.getGun().getSymbol();
+    }
+    else{
+        game_map[player.getGun().getY()][player.getGun().getX()]=' ';
+        player.getGun().initialize();
+    }
+}
 void World::playerMovement() {
+//    if(player.getGun().getIsFired()){
+//
+//        game_map[player.getGun().getY()][player.getGun().getX()]=player.getGun().getSymbol();
+//    }
     game_map[player.getY()][player.getX()] = ' ';
     rlutil::cls();
     int directionX = 0, directionY = 0;
@@ -105,6 +142,15 @@ void World::playerMovement() {
         case 'w':
             directionY = -1;
             break;
+        case 'e':
+            try {
+                player.fire();
+                game_map[player.getGun().getY()][player.getGun().getX()]=player.getGun().getSymbol();
+            }
+            catch (FireError &err){
+                std::cout<<"deja ai tras!";
+            }
+            break;
         case 'q':
             gata = true;
             break;
@@ -114,7 +160,7 @@ void World::playerMovement() {
     int nextY = player.getY() + directionY;
     switch (checkPosition(nextX,nextY)){
         case '$':
-            nextLevel();
+            gata=true;
             break;
         case ' ':
             player.move(directionX, directionY);
@@ -123,11 +169,9 @@ void World::playerMovement() {
             break;
 
     }
-//        if(game_map[nextY][nextX] == enemy.getSymbol())
-//            nextLevel();
-//        else if(game_map[nextY][nextX] == ' ')
-//            player.move(directionX, directionY);
+
     game_map[player.getY()][player.getX()] = player.getSymbol();
+
 }
 void World::enemyMovement(){
     game_map[enemy.getY()][enemy.getX()] = ' ';
@@ -142,7 +186,8 @@ void World::enemyMovement(){
 void World::play() {
 
     while(!gata) {
-
+        if(player.getGun().getIsFired())
+            gunMovement();
         playerMovement();
         enemyMovement();
         std::cout<<*this;
