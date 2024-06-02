@@ -42,7 +42,7 @@ int main() {
             world.play();
             std::cout<<"                                press Q to quit\n"
                      <<"                       press any other key to try again...\n";
-            if(tolower(getch()) == 'q'){
+            if(getch() == 'q'){
                 playing = false;
             }
 

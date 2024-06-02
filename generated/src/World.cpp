@@ -134,7 +134,7 @@ void World::playerMovement() {
 
     int directionX = 0, directionY = 0;
 
-    switch(tolower(key())) {
+    switch(key()) {
         case 'a':
             directionX = -1;
             break;
