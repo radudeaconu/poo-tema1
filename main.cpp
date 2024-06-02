@@ -36,7 +36,7 @@ int main() {
         rlutil::anykey("\n\npress e to continue\n\n");
         while(playing) {
 
-        World world(/*(char)*/ icon);
+        World world((char) icon);
 
             rlutil::cls();
             world.play();
