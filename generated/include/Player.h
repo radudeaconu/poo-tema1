@@ -5,6 +5,7 @@
 #ifndef OOP_PLAYER_H
 #define OOP_PLAYER_H
 
+#include <iostream>
 #include "Entity.h"
 #include "Exception.h"
 
