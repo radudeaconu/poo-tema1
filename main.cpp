@@ -29,31 +29,24 @@ int main() {
     std::cout<<"e2: "<<e2<<"e3: "<<e3;
     try {
         char icon;
-
+        bool playing=true;
         std::cout << "select (by pressing) the character for your player icon...";
         icon = getch();
         std::cout << "\n\nyou selected: " << icon;
         rlutil::anykey("\n\npress e to continue\n\n");
+        while(playing) {
 
         World world(/*(char)*/ icon);
 
-        rlutil::cls();
+            rlutil::cls();
+            world.play();
+            std::cout<<"                                press Q to quit\n"
+                     <<"                       press any other key to try again...\n";
+            if(tolower(getch()) == 'q'){
+                playing = false;
+            }
 
-        //World world((char) icon);
-        std::cout << world.getPlayer();
-        rlutil::anykey();
-        //world.initialize();
-        std::cout << world;
-        world.play();
-        rlutil::cls();
-        std::cout<<"\n ######      ###    ##     ## ########     #######  ##     ## ######## ######## \n"
-                   <<"##    ##    ## ##   ###   ### ##          ##     ## ##     ## ##       ##     ##\n"
-                   <<"##         ##   ##  #### #### ##          ##     ## ##     ## ##       ##     ##\n"
-                   <<"##   #### ##     ## ## ### ## ######      ##     ## ##     ## ######   ######## \n"
-                   <<"##    ##  ######### ##     ## ##          ##     ##  ##   ##  ##       ##   ##  \n"
-                   <<"##    ##  ##     ## ##     ## ##          ##     ##   ## ##   ##       ##    ## \n"
-                   <<" ######   ##     ## ##     ## ########     #######     ###    ######## ##     ##\n"
-                   <<"                                   SCORE: "<<world.getScore()<<"\n";
+        }
     }
     catch (NameError& err){
         std::cout<< err.what();

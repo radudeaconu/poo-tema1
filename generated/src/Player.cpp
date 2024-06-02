@@ -4,7 +4,7 @@
 #include "Player.h"
 
 Player::Player(char symbol) : Entity(1,1, symbol){
-    if(symbol == '$' || symbol == '#' || symbol == 'H')
+    if(symbol == '$' || symbol == '#' || symbol == 'H' || !(isalnum(symbol)))
         throw NameError(symbol);
 }
 
@@ -70,7 +70,7 @@ void Gun::move(){
     x+=3;
 }
 void Gun::initialize() {
+    isFired=false;
     x=0;
     y=0;
-    isFired=false;
 }

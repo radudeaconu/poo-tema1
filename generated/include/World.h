@@ -22,6 +22,7 @@ class World{
     Enemy enemy;
     std::array<std::string, 18> game_map;
     int score=0,lives;
+    static int highscore;
     bool gata= false;
 
     void initialize(char icon);
@@ -43,6 +44,7 @@ public:
     char checkPosition(int x, int y);
     void playerMovement();
     void play();
+    void game();
     void gunMovement();
     void enemyMovement();
 };

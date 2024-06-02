@@ -3,7 +3,7 @@
 //
 #include "World.h"
 
-
+int World::highscore = 0;
 
 void World::initialize(char icon) {
     this->player=Player(icon);
@@ -44,9 +44,9 @@ World::World(const Player &player, const std::array<Wall, 15> &walls, const Enem
 const Player &World::getPlayer() const {
     return player;
 }
-const int& World::getScore() const {
-    return score;
-}
+//const int& World::getScore() const {
+//    return score;
+//}
 
 std::ostream &operator<<(std::ostream &os, const World &world) {
     os << "\nscore: " << world.score/* << "\nlives: " << world.lives*/<< "\ngame_map:\n" << world.game_map[0] << "\n"
@@ -86,6 +86,8 @@ void World::nextLevel() {
     enemy.initialize();
     generate();
     score++;
+    if (score > highscore)
+        highscore = score;
 }
 
 char World::checkPosition(int x, int y) {
@@ -129,7 +131,7 @@ void World::playerMovement() {
 //        game_map[player.getGun().getY()][player.getGun().getX()]=player.getGun().getSymbol();
 //    }
     game_map[player.getY()][player.getX()] = ' ';
-    rlutil::cls();
+
     int directionX = 0, directionY = 0;
 
     switch(tolower(key())) {
@@ -158,8 +160,6 @@ void World::playerMovement() {
             gata = true;
             break;
     }
-    //0x7FFFFFFF
-    //1000 0000 0000 ... = -1
 
     int nextX = player.getX() + directionX;
     int nextY = player.getY() + directionY;
@@ -182,15 +182,18 @@ void World::enemyMovement(){
     game_map[enemy.getY()][enemy.getX()] = ' ';
     int moveX = enemy.randomMovement();
     int moveY = enemy.randomMovement();
+    if(enemy.getX()+moveX==player.getX() && enemy.getY()+moveY==player.getY())
+        gata=true;
     if(checkPosition(enemy.getX() + moveX, enemy.getY() + moveY) == ' '){
         enemy.move(moveX, moveY);
     }
     game_map[enemy.getY()][enemy.getX()] = enemy.getSymbol();
 }
 
-void World::play() {
+void World::game() {
 
     while(!gata) {
+        rlutil::cls();
         if(player.getGun().getIsFired())
             gunMovement();
         playerMovement();
@@ -199,3 +202,17 @@ void World::play() {
     }
 
 }
+void World::play(){
+    game();
+    rlutil::cls();
+    std::cout<<"\n ######      ###    ##     ## ########     #######  ##     ## ######## ######## \n"
+             <<"##    ##    ## ##   ###   ### ##          ##     ## ##     ## ##       ##     ##\n"
+             <<"##         ##   ##  #### #### ##          ##     ## ##     ## ##       ##     ##\n"
+             <<"##   #### ##     ## ## ### ## ######      ##     ## ##     ## ######   ######## \n"
+             <<"##    ##  ######### ##     ## ##          ##     ##  ##   ##  ##       ##   ##  \n"
+             <<"##    ##  ##     ## ##     ## ##          ##     ##   ## ##   ##       ##    ## \n"
+             <<" ######   ##     ## ##     ## ########     #######     ###    ######## ##     ##\n"
+             <<"               SCORE: "<<score<<"                               HIGHSCORE:" <<highscore<<"\n";
+
+}
+
