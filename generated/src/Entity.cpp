@@ -21,4 +21,6 @@ Entity::Entity(char _symbol) : symbol(_symbol) {}
 
 Entity::Entity(const Entity &other) = default;
 
+Entity::~Entity() = default;
+
 

@@ -18,6 +18,9 @@ public:
     Wall();
     Wall(int x, int y, char symbol, int x_length, int y_length);
     Wall(const Wall& other);
+    std::shared_ptr<Entity> clone() const override{
+        return std::make_shared<Wall>(*this);
+    }
 
     void initialize() override;
 

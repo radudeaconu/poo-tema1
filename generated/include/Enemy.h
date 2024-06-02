@@ -18,7 +18,9 @@ public:
     Enemy();
     Enemy(int x, int y, char symbol);
     Enemy(const Enemy& other);
-
+    std::shared_ptr<Entity> clone() const override{
+        return std::make_shared<Enemy>(*this);
+    }
     ~Enemy() override;
 
     void initialize() override;

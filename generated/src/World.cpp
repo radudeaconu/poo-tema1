@@ -44,6 +44,9 @@ World::World(const Player &player, const std::array<Wall, 15> &walls, const Enem
 const Player &World::getPlayer() const {
     return player;
 }
+const int& World::getScore() const {
+    return score;
+}
 
 std::ostream &operator<<(std::ostream &os, const World &world) {
     os << "\nscore: " << world.score/* << "\nlives: " << world.lives*/<< "\ngame_map:\n" << world.game_map[0] << "\n"
@@ -129,7 +132,7 @@ void World::playerMovement() {
     rlutil::cls();
     int directionX = 0, directionY = 0;
 
-    switch(key()) {
+    switch(tolower(key())) {
         case 'a':
             directionX = -1;
             break;
@@ -155,6 +158,8 @@ void World::playerMovement() {
             gata = true;
             break;
     }
+    //0x7FFFFFFF
+    //1000 0000 0000 ... = -1
 
     int nextX = player.getX() + directionX;
     int nextY = player.getY() + directionY;

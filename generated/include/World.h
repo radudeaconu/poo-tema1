@@ -35,6 +35,7 @@ public:
     World(const Player &player, const std::array<Wall, 15> &walls, const Enemy &enemy, int score, int lives);
 
     const Player &getPlayer() const;
+    const int& getScore() const;
 
     friend std::ostream &operator<<(std::ostream &os, const World &world);
 

@@ -5,7 +5,6 @@
 #ifndef OOP_PLAYER_H
 #define OOP_PLAYER_H
 
-#include <ostream>
 #include "Entity.h"
 #include "Exception.h"
 
@@ -16,6 +15,9 @@ public:
     Gun(int x = 0, int y = 0, char symbol = '-', bool isFired = false);
     Gun(const Gun& other) = default;
     ~Gun() override = default;
+    std::shared_ptr<Entity> clone() const override{
+        return std::make_shared<Gun>(*this);
+    }
     void initialize() override;
     void fire(int _x, int _y);
     bool getIsFired();
@@ -28,11 +30,15 @@ class Player: public Entity{
     Gun gun;
 
 public:
+
     explicit Player(char symbol);
     Player(int x=1, int y=1, char symbol='o');
     Player(const Player& other);
     Player& operator=(const Player& other);
     ~Player() {}
+    std::shared_ptr<Entity> clone() const override{
+        return std::make_shared<Player>(*this);
+    }
 
     // Metoda swap
     friend void swap(Player& first, Player& second);

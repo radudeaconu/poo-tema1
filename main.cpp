@@ -16,7 +16,6 @@
 
 
 int main() {
-
     Player p1;
     Player p2(2,3,'%'),p3(p1);
     p3=p2;
@@ -36,7 +35,7 @@ int main() {
         std::cout << "\n\nyou selected: " << icon;
         rlutil::anykey("\n\npress e to continue\n\n");
 
-        World world((char) icon);
+        World world(/*(char)*/ icon);
 
         rlutil::cls();
 
@@ -53,7 +52,8 @@ int main() {
                    <<"##   #### ##     ## ## ### ## ######      ##     ## ##     ## ######   ######## \n"
                    <<"##    ##  ######### ##     ## ##          ##     ##  ##   ##  ##       ##   ##  \n"
                    <<"##    ##  ##     ## ##     ## ##          ##     ##   ## ##   ##       ##    ## \n"
-                   <<" ######   ##     ## ##     ## ########     #######     ###    ######## ##     ##\n";
+                   <<" ######   ##     ## ##     ## ########     #######     ###    ######## ##     ##\n"
+                   <<"                                   SCORE: "<<world.getScore()<<"\n";
     }
     catch (NameError& err){
         std::cout<< err.what();
