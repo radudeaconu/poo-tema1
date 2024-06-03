@@ -13,7 +13,7 @@ Player::Player(int x, int y, char symbol) : Entity(x, y, symbol) {
         throw NameError(symbol);
 }
 
-Player::Player(const Player &other) : Entity(dynamic_cast<const Entity&> (other)) {}
+Player::Player(const Player &other) : Entity(other) {}
 
 Player &Player::operator=(const Player &other) {
     x = other.x;

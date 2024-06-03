@@ -7,7 +7,7 @@ Enemy::Enemy() : Entity('$'), gen(rd()) {initialize();}
 
 Enemy::Enemy(int x, int y, char symbol) : Entity(x, y, symbol), /*x(x), y(y), symbol(symbol),*/ gen(rd()) {}
 
-Enemy::Enemy(const Enemy &other) : Entity(dynamic_cast<const Entity&> (other))/*: x{other.x}, y{other.y}, symbol{other.symbol}*/ {}
+Enemy::Enemy(const Enemy &other) : Entity(other)/*: x{other.x}, y{other.y}, symbol{other.symbol}*/ {}
 
 Enemy::~Enemy() = default;
 

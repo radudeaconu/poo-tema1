@@ -92,19 +92,19 @@ endfunction()
 # NOTE: update executable name in .github/workflows/cmake.yml:25 when changing name here
 add_executable(${PROJECT_NAME} main.cpp
         generated/src/Helper.cpp
-        generated/include/Entity.h
-        generated/include/Entity.h
-        generated/src/Entity.cpp
-        generated/src/Entity.cpp
-        generated/include/Player.h
-        generated/src/Player.cpp
-        generated/include/Enemy.h
-        generated/src/Enemy.cpp
-        generated/include/Wall.h
-        generated/src/Wall.cpp
-        generated/include/World.h
-        generated/src/World.cpp
-        generated/include/Exception.h
+        Entity.h
+        Entity.h
+        Entity.cpp
+        Entity.cpp
+        Player.h
+        Player.cpp
+        Enemy.h
+        Enemy.cpp
+        Wall.h
+        Wall.cpp
+        World.h
+        World.cpp
+        Exception.h
 )
 
 ###############################################################################
