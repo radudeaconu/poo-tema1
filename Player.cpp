@@ -5,12 +5,12 @@
 
 Player::Player(char symbol) : Entity(1,1, symbol){
     if(symbol == '$' || symbol == '#' || symbol == 'H' || !(isalnum(symbol)))
-        throw NameError(symbol);
+        throw NameError();
 }
 
 Player::Player(int x, int y, char symbol) : Entity(x, y, symbol) {
     if(symbol == '$' || symbol == '#' || symbol == 'H')
-        throw NameError(symbol);
+        throw NameError();
 }
 
 Player::Player(const Player &other) : Entity(other) {}

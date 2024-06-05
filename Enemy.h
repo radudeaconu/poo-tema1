@@ -23,7 +23,7 @@ public:
     }
     ~Enemy() override;
 
-    void initialize() override;
+    void initialize() ;
 
     void move(int directionX, int directionY);
 

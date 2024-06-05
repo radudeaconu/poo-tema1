@@ -22,7 +22,7 @@ public:
         return std::make_shared<Wall>(*this);
     }
 
-    void initialize() override;
+    void initialize();
 
     int getXLength() const;
 

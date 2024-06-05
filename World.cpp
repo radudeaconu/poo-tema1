@@ -41,9 +41,9 @@ World::World() {initialize('o');}
 World::World(const Player &player, const std::array<Wall, 15> &walls, const Enemy &enemy, int score, int lives) : player(
         player), walls(walls), enemy(enemy), score(score), lives(lives) {}
 
-const Player &World::getPlayer() const {
-    return player;
-}
+//const Player &World::getPlayer() const {
+//    return player;
+//}
 //const int& World::getScore() const {
 //    return score;
 //}

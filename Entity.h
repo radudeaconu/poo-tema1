@@ -16,7 +16,7 @@ public:
     int getX() const;
     int getY() const;
     char getSymbol() const;
-    virtual void initialize() = 0;
+    //virtual void initialize() = 0;
     //Entity();
 
     virtual std::shared_ptr<Entity> clone() const = 0;

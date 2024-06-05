@@ -17,7 +17,7 @@ char Entity::getSymbol() const {
 
 Entity::Entity(int _x, int _y, char _symbol) : x(_x), y(_y), symbol(_symbol) {}
 
-Entity::Entity(char _symbol) : symbol(_symbol) {}
+Entity::Entity(char _symbol) : x(1), y(1), symbol(_symbol) {}
 
 Entity::Entity(const Entity &other) = default;
 

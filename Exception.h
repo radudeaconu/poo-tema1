@@ -12,7 +12,7 @@ class GameError : public std::runtime_error {
 };
 class NameError : public GameError {
 public:
-    explicit NameError(char symbol) : GameError("alege alt simbol\n") {};
+    explicit NameError() : GameError("alege alt simbol\n") {};
 };
 class FireError : public GameError {
 public:

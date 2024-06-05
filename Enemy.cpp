@@ -3,7 +3,12 @@
 //
 #include "Enemy.h"
 
-Enemy::Enemy() : Entity('$'), gen(rd()) {initialize();}
+Enemy::Enemy() : Entity('$'), gen(rd()) {
+    std::uniform_int_distribution<> x_dist(1, 60); // Distribution for x coordinates from 1 to 60
+    std::uniform_int_distribution<> y_dist(1, 16); // Distribution for y coordinates from 1 to 16
+    x = x_dist(gen); // Generate random x coordinate
+    y = y_dist(gen); // Generate random y coordinate
+}
 
 Enemy::Enemy(int x, int y, char symbol) : Entity(x, y, symbol), /*x(x), y(y), symbol(symbol),*/ gen(rd()) {}
 
