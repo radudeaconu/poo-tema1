@@ -39,10 +39,10 @@ void Player::move(int directionX, int directionY) {
     y=y+directionY;
 }
 
-void Player::initialize() {
+void Player::reset() {
     x=1;
     y=1;
-    gun.initialize();
+    gun.reset();
 }
 void Player::fire(){
     gun.fire(x+1, y);
@@ -69,7 +69,7 @@ bool Gun::getIsFired(){
 void Gun::move(){
     x+=3;
 }
-void Gun::initialize() {
+void Gun::reset() {
     isFired=false;
     x=0;
     y=0;

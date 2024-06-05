@@ -18,8 +18,8 @@ char key();
 
 class World{
     Player player;
-    std::array<Wall, 15> walls;
-    Enemy enemy;
+    std::vector<std::shared_ptr<Wall>> walls;
+    std::vector<std::shared_ptr<Enemy>> enemies;
     std::array<std::string, 18> game_map;
     int score=0,lives;
     static int highscore;
@@ -33,7 +33,7 @@ public:
 
     World();
 
-    World(const Player &player, const std::array<Wall, 15> &walls, const Enemy &enemy, int score, int lives);
+    World(const Player &player, const std::vector<std::shared_ptr<Wall>> &walls, const std::vector<std::shared_ptr<Enemy>> &enemies, int score, int lives);
 
    // const Player &getPlayer() const;
     const int& getScore() const;

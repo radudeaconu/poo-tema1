@@ -19,7 +19,7 @@ public:
     std::shared_ptr<Entity> clone() const override{
         return std::make_shared<Gun>(*this);
     }
-    void initialize() ;
+    void reset() ;
     void fire(int _x, int _y);
     bool getIsFired();
     void move();
@@ -46,7 +46,7 @@ public:
 
     friend std::ostream &operator<<(std::ostream &os, const Player &player);
     void move(int directionX, int directionY);
-    void initialize() ;
+    void reset() ;
     void fire();
     Gun& getGun();
 };

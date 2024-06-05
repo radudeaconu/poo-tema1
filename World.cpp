@@ -5,14 +5,20 @@
 
 int World::highscore = 0;
 
+//void World::initialize(char icon) {
+//    this->player=Player(icon);
+//    ///score+lives
+//    score=0;
+//    //lives=3;
+//    enemy.initialize();
+//    generate();
+//
+//}
 void World::initialize(char icon) {
-    this->player=Player(icon);
-    ///score+lives
-    score=0;
-    //lives=3;
-    enemy.initialize();
+    this->player = Player(icon);
+    score = 0;
+    enemies.clear(); // Clear existing enemies if any
     generate();
-
 }
 
 void World::generate() {
@@ -22,24 +28,44 @@ void World::generate() {
     for( int i=1;i<=16;i++)
         game_map[i]="H                                                            H";
     ///walls
-    for(int i=0;i<15;i++){
-        walls[i].initialize();
-        for(int j=0;j<walls[i].getXLength();j++)
-            for(int k=0;k<walls[i].getYLength();k++)
-                game_map[walls[i].getY()+k][walls[i].getX()+j] = walls[i].getSymbol();
+    walls.clear();
+    for (int i = 0; i < 15; i++) {
+        auto new_wall = std::make_shared<Wall>(); // Create a new wall
+        //new_wall->initialize();                  // Initialize the wall
+        walls.push_back(new_wall);               // Store the pointer to the new wall
+    }
+    for (auto& wall : walls) {
+        for (int j = 0; j < wall->getXLength(); j++)
+            for (int k = 0; k < wall->getYLength(); k++)
+                game_map[wall->getY() + k][wall->getX() + j] = wall->getSymbol();
+    }
+//    for(int i=0;i<15;i++){
+//        walls[i].initialize();
+//        for(int j=0;j<walls[i].getXLength();j++)
+//            for(int k=0;k<walls[i].getYLength();k++)
+//                game_map[walls[i].getY()+k][walls[i].getX()+j] = walls[i].getSymbol();
+//    }
+    enemies.clear();
+    for (int i = 0; i < 3; i++) { // Example: Initialize 3 enemies
+        auto new_enemy = std::make_shared<Enemy>(); // Assuming default constructor is suitable
+        new_enemy->initialize();                    // Initialize the enemy
+        enemies.push_back(new_enemy);               // Store the pointer to the new enemy
     }
     ///add player and enemy
 
     game_map[player.getY()][player.getX()] = player.getSymbol();
-    game_map[enemy.getY()][enemy.getX()] = enemy.getSymbol();
+    game_map[player.getY()][player.getX()] = player.getSymbol();
+    for (auto& enemy : enemies) {
+        game_map[enemy->getY()][enemy->getX()] = enemy->getSymbol();
+    }
 }
 
 World::World(char icon) {initialize(icon);}
 
 World::World() {initialize('o');}
 
-World::World(const Player &player, const std::array<Wall, 15> &walls, const Enemy &enemy, int score, int lives) : player(
-        player), walls(walls), enemy(enemy), score(score), lives(lives) {}
+World::World(const Player &player, const std::vector<std::shared_ptr<Wall>> &walls, const std::vector<std::shared_ptr<Enemy>> &enemies, int score, int lives) : player(
+        player), walls(walls), enemies(enemies), score(score), lives(lives) {}
 
 //const Player &World::getPlayer() const {
 //    return player;
@@ -82,8 +108,8 @@ char key() {
 
 void World::nextLevel() {
     //game_map[player.getY()][player.getX()]=' ';
-    player.initialize();
-    enemy.initialize();
+    player.reset();
+    //enemy.initialize();
     generate();
     score++;
     if (score > highscore)
@@ -122,7 +148,7 @@ void World::gunMovement() {
     }
     else{
         game_map[player.getGun().getY()][player.getGun().getX()]=' ';
-        player.getGun().initialize();
+        player.getGun().reset();
     }
 }
 void World::playerMovement() {
@@ -178,16 +204,29 @@ void World::playerMovement() {
     game_map[player.getY()][player.getX()] = player.getSymbol();
 
 }
-void World::enemyMovement(){
-    game_map[enemy.getY()][enemy.getX()] = ' ';
-    int moveX = enemy.randomMovement();
-    int moveY = enemy.randomMovement();
-    if(enemy.getX()+moveX==player.getX() && enemy.getY()+moveY==player.getY())
-        gata=true;
-    if(checkPosition(enemy.getX() + moveX, enemy.getY() + moveY) == ' '){
-        enemy.move(moveX, moveY);
+//void World::enemyMovement(){
+//    game_map[enemy.getY()][enemy.getX()] = ' ';
+//    int moveX = enemy.randomMovement();
+//    int moveY = enemy.randomMovement();
+//    if(enemy.getX()+moveX==player.getX() && enemy.getY()+moveY==player.getY())
+//        gata=true;
+//    if(checkPosition(enemy.getX() + moveX, enemy.getY() + moveY) == ' '){
+//        enemy.move(moveX, moveY);
+//    }
+//    game_map[enemy.getY()][enemy.getX()] = enemy.getSymbol();
+//}
+void World::enemyMovement() {
+    for (auto& enemy : enemies) {
+        game_map[enemy->getY()][enemy->getX()] = ' '; // Clear old position
+        int moveX = enemy->randomMovement();
+        int moveY = enemy->randomMovement();
+        if (enemy->getX() + moveX == player.getX() && enemy->getY() + moveY == player.getY())
+            gata = true;
+        if (checkPosition(enemy->getX() + moveX, enemy->getY() + moveY) == ' ') {
+            enemy->move(moveX, moveY);
+        }
+        game_map[enemy->getY()][enemy->getX()] = enemy->getSymbol(); // Set new position
     }
-    game_map[enemy.getY()][enemy.getX()] = enemy.getSymbol();
 }
 
 void World::game() {
